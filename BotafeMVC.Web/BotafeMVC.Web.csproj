@@ -17,4 +17,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BotafeMVC.Application\BotafeMVC.Application.csproj" />
+    <ProjectReference Include="..\BotafeMVC.Infrastructure\BotafeMVC.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
