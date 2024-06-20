@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BotafeMVC.Application.ViewModels.Event
 {
-    public class EventDetailsVm : IMapFrom<BotafeMVC.Domain.Model.Event>
+    public class EventDetailsVm : IMapFrom<BotafeMVC.Domain.Model.Event>, IEventVm
     {
         public int Id { get; set; }
         [DisplayName("Nazwa")]

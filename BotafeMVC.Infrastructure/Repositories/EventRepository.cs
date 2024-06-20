@@ -1,17 +1,19 @@
-﻿using BotafeMVC.Domain.Interfaces;
+﻿using BotafeMVC.Common;
+using BotafeMVC.Domain.Interfaces;
 using BotafeMVC.Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace BotafeMVC.Infrastructure.Repositories
 {
     public class EventRepository : IEventRepository
     {
         private readonly Context _context;
+        private readonly IRepository _repository;
 
-        public EventRepository(Context context)
+        public EventRepository(Context context, IRepository repository)
         {
             _context = context;
+            _repository = repository;
         }
 
         public void DeleteEvent(int itemId)
@@ -62,11 +64,16 @@ namespace BotafeMVC.Infrastructure.Repositories
             return _context.EventEnrollments.Include(e => e.IdentityUser).Where(e => e.EventId == EventId).AsQueryable();
         }
 
-        public int AddEnrollment(EventEnrollment enrollment)
+        public Either<IError, int> AddEnrollment(EventEnrollment enrollment)
         {
-            _context.EventEnrollments.Add(enrollment);
-            _context.SaveChanges();
-            return enrollment.Id;
+            return _repository.Invoke(() =>
+            {
+                _context.EventEnrollments.Add(enrollment);
+                _context.SaveChanges();
+                return enrollment.Id;
+            });
         }
+
+       
     }
 }

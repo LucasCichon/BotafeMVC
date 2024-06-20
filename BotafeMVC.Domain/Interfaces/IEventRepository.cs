@@ -1,4 +1,5 @@
-﻿using BotafeMVC.Domain.Model;
+﻿using BotafeMVC.Common;
+using BotafeMVC.Domain.Model;
 using System;
 
 namespace BotafeMVC.Domain.Interfaces
@@ -15,6 +16,6 @@ namespace BotafeMVC.Domain.Interfaces
 
         Event GetEvent(int id);
         void UpdateEvent(Event toUpdate);
-        int AddEnrollment(EventEnrollment enrollment);
+        Either<IError, int> AddEnrollment(EventEnrollment enrollment);
     }
 }

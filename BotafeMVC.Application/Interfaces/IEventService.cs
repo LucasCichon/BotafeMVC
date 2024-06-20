@@ -1,9 +1,5 @@
 ﻿using BotafeMVC.Application.ViewModels.Event;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BotafeMVC.Common;
 
 namespace BotafeMVC.Application.Interfaces
 {
@@ -15,7 +11,7 @@ namespace BotafeMVC.Application.Interfaces
         EventDetailsVm GetEventDetails(int id);
         EventEditVm GetEventForEdit(int id);
         void UpdateEvent(EventEditVm model);
-        int Enroll(int id);
+        Either<IError, int> Enroll(int id);
         void Delete(int id);
     }
 }

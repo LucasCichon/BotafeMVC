@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BotafeMVC.Common\BotafeMVC.Common.csproj" />
     <ProjectReference Include="..\BotafeMVC.Domain\BotafeMVC.Domain.csproj" />
   </ItemGroup>
 
