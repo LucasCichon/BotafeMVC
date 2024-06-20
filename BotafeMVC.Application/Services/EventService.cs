@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using BotafeMVC.Application.Errors;
 using BotafeMVC.Application.Interfaces;
 using BotafeMVC.Application.ViewModels.Event;
+using BotafeMVC.Common;
 using BotafeMVC.Domain.Interfaces;
 using BotafeMVC.Domain.Model;
 using Microsoft.AspNetCore.Http;
@@ -117,15 +119,23 @@ namespace BotafeMVC.Application.Services
 
         public EventDetailsVm GetEventDetails(int id)
         {
-            var botafeEvent = _eventRepository.GetEvent(id);
-            var result = _mapper.Map<EventDetailsVm>(botafeEvent);
-            return result;
+            return (EventDetailsVm)GetEvent<EventDetailsVm>(id, true);
         }
 
         public EventEditVm GetEventForEdit(int id)
         {
+            return (EventEditVm)GetEvent<EventEditVm>(id, false);
+        }
+
+        private IEventVm GetEvent<T>(int id, bool withAvailablePlaces) where T : IEventVm
+        {
             var botafeEvent = _eventRepository.GetEvent(id);
-            var result = _mapper.Map<EventEditVm>(botafeEvent);
+            var result = _mapper.Map<T>(botafeEvent);
+            if (withAvailablePlaces)
+            {
+                var enrollments = _eventRepository.GetAllEnrollments(id);
+                result.PlacesAvailable = result.TotalNumberOfPlaces - enrollments.Count();
+            }
             return result;
         }
 
@@ -135,9 +145,16 @@ namespace BotafeMVC.Application.Services
             _eventRepository.UpdateEvent(toUpdate);
         }
 
-        public int Enroll(int eventId)
+        public Either<IError, int> Enroll(int eventId)
         {
             var userId =  _userManager.GetUserId(_httpContext.HttpContext.User);
+            var enrollments = _eventRepository.GetAllEnrollments(eventId);
+
+            if(enrollments.Any(e => e.IdentityUserId == userId))
+            {
+                return Either<IError, int>.Error(new EnrollmentError("Użytkownik jest już zapisany na wydarzenie."));
+            }
+
             var enrollment = new EventEnrollment() { EventId = eventId, IdentityUserId = userId };
             return _eventRepository.AddEnrollment(enrollment);
         }

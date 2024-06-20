@@ -33,31 +33,46 @@
         </thead>
         <tbody>
     @foreach (var item in Model.Events) {
-            <tr>
-                <td>
-                    @Html.HiddenFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                    @if (User.IsInRole(ServiceConstants.Roles.Admin) || User.IsInRole(ServiceConstants.Roles.SuperUser))
-                {
+           
+                var style = "";
+                @if (item.CurrentUserIsEnrolled) style = $"style=background-color:{StyleSettings.Color.TableRowBackgroundColorGreen}";
+           
+                <tr @style>
                     <td>
-                        @Html.ActionLink("Edytuj", "Edit", new { id=item.Id}) |
-                        @Html.ActionLink("Detale", "EventDetails", new { id = item.Id }) |
-                        @Html.ActionLink("Usuń", "Delete", new { id = item.Id })
+                        @Html.HiddenFor(modelItem => item.Id)
                     </td>
-                }
-                <td>
-                    @Html.ActionLink("Dołącz", "Enroll", new { id = item.Id }) |
-                </td>
-            </tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    @if (User.IsInRole(ServiceConstants.Roles.Admin) || User.IsInRole(ServiceConstants.Roles.SuperUser))
+                    {
+                        <td>
+                            @Html.ActionLink("Edytuj", "Edit", new { id=item.Id}) |
+                            @Html.ActionLink("Detale", "EventDetails", new { id = item.Id }) |
+                            @Html.ActionLink("Usuń", "Delete", new { id = item.Id })
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    @* @if (!item.CurrentUserIsEnrolled)
+                    { *@
+                        <td>
+                            @Html.ActionLink("Dołącz", "Enroll", new { id = item.Id })
+                        </td>
+                    @* }
+                    else
+                    {
+                        <td></td>
+                    } *@
+                </tr>
     }
         </tbody>
     </table>

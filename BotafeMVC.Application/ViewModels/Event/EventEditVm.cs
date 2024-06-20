@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace BotafeMVC.Application.ViewModels.Event
 {
-    public class EventEditVm : IMapFrom<BotafeMVC.Domain.Model.Event>
+    public class EventEditVm : IMapFrom<BotafeMVC.Domain.Model.Event>, IEventVm
     {
         public int Id { get; set; }
         [DisplayName("Nazwa")]
@@ -15,6 +15,7 @@ namespace BotafeMVC.Application.ViewModels.Event
         public DateOnly EndDate { get; set; }
         [DisplayName("Dostępne miejsca")]
         public int TotalNumberOfPlaces { get; set; }
+        public int PlacesAvailable { get; set; }
 
         public void Mapping(Profile profile)
         {

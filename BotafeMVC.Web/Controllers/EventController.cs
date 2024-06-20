@@ -2,6 +2,7 @@
 using BotafeMVC.Application.ViewModels.Event;
 using BotafeMVC.Common;
 using BotafeMVC.Web.Filters;
+using BotafeMVC.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,8 @@ namespace BotafeMVC.Web.Controllers
         [CheckPermissions(ServiceConstants.Claims.ViewEvents)]
         public IActionResult Index()
         {
-            var model = _eventService.GetAllEventsForList(pageSize, pageNo, searchString);
+            var name = _httpContext.HttpContext?.User.Identity?.Name;
+            var model = _eventService.GetAllEventsForList(pageSize, pageNo, searchString, name);
             return View(model);
         }
 
@@ -102,7 +104,13 @@ namespace BotafeMVC.Web.Controllers
             }
             else
             {
-                _eventService.Enroll(id);
+                var enrolled = _eventService.Enroll(id);
+
+                if (enrolled.IsLeft)
+                {
+                    return View("Error", new ErrorViewModel() {Message = enrolled.Left.Message });
+                }
+
                 return RedirectToAction("Index");
             }
         }
