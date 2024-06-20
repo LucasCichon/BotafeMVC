@@ -1,22 +1,34 @@
-using BotafeMVC.Application.Interfaces;
-using BotafeMVC.Application.Services;
-using BotafeMVC.Web.Data;
+using BotafeMVC.Application;
+using BotafeMVC.Common;
+using BotafeMVC.Infrastructure;
+using BotafeMVC.Web.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Logs/myLog-{Date}.txt")
+    .CreateLogger();
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
+
+builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<Context>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient<IEventService, EventService>();
+builder.Services.AddInfrastructure();
+builder.Services.AddApplication();
+builder.Services.SetRegisterConfiguration();
+//builder.Services.AddPolicies();
 
 var app = builder.Build();
 
@@ -32,11 +44,14 @@ else
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

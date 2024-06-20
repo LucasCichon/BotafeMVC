@@ -1,37 +1,125 @@
 ﻿using BotafeMVC.Application.Interfaces;
-using BotafeMVC.Application.Services;
-using BotafeMVC.Web.Models;
+using BotafeMVC.Application.ViewModels.Event;
+using BotafeMVC.Common;
+using BotafeMVC.Web.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BotafeMVC.Web.Controllers
 {
+    [Authorize]
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly ILogger<EventController> _logger;
+        private const int pageSize = 5;
+        private const int pageNo = 1;
+        private const string searchString = "";
 
-        public EventController(IEventService eventService)
+        public EventController(IEventService eventService, ILogger<EventController> logger, IHttpContextAccessor httpContext)
         {
             _eventService = eventService;
+            _httpContext = httpContext;
+            _logger = logger;
+            
         }
-
-        public IActionResult Events(int id, string search)
-        {
-            //VieData - informacja zostaje, i może być przesłana np do _Layout
-            ViewData["DataTest"] = "ViewDataTest";
-            //Informacja jest przesłana tylko do jednej akcji, po czym przepada
-            ViewBag.BagTest = "ViewBagTest";
-
-            List<BotafeEvent> events = new List<BotafeEvent>();
-            events.Add(new BotafeEvent() { Id = 1, Name = "Ławka", StartDate = new DateOnly(2024, 7, 13), EndDate = new DateOnly(2024, 7, 17), PlacesAvailable = 15, TotalNumberOfPlaces = 50 });
-            events.Add(new BotafeEvent() { Id = 2, Name = "Lectio Divina", StartDate = new DateOnly(2024, 8, 2), EndDate = new DateOnly(2024, 9, 2), PlacesAvailable = 2, TotalNumberOfPlaces = 8 });
-            events.Add(new BotafeEvent() { Id = 3, Name = "Akrobatyka Małżeńska", StartDate = new DateOnly(2024, 10, 12), EndDate = new DateOnly(2024, 10, 25), PlacesAvailable = 7, TotalNumberOfPlaces = 30 });
-
-            return View(events);
-        }
-
+        [CheckPermissions(ServiceConstants.Claims.ViewEvents)]
         public IActionResult Index()
         {
-            return View(_eventService.GetAllEvents());
+            var model = _eventService.GetAllEventsForList(pageSize, pageNo, searchString);
+            return View(model);
+        }
+
+        public IActionResult My()
+        {
+            var userName = _httpContext.HttpContext?.User.Identity?.Name;
+            var model = _eventService.GetUserEventsForList(pageSize, pageNo, searchString, userName);
+            return View("Index", model);
+        }
+
+        [HttpPost]
+        [CheckPermissions(ServiceConstants.Claims.ViewEvents)]
+        public IActionResult Index(int pageSize, int pageNo, string searchString)
+        {
+            var model = _eventService.GetAllEventsForList(pageSize, pageNo, searchString);
+            return View(model);
+        }
+
+        [HttpGet]
+        [CheckPermissions(ServiceConstants.Claims.AddNewEvent)]
+        public IActionResult AddEvent()
+        {
+            return View(new NewEventVm());
+        }
+
+        [HttpPost]
+        [CheckPermissions(ServiceConstants.Claims.AddNewEvent)]
+        [ValidateAntiForgeryToken] //pozwala sprawdzić czy nikt się nie podszywa pod nasze widoki
+        public IActionResult AddEvent(NewEventVm model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = _eventService.AddEvent(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        public IActionResult EventDetails(int Id)
+        {
+            var model = _eventService.GetEventDetails(Id);
+            return View(model);
+        }
+
+        [HttpGet]
+        [CheckPermissions(ServiceConstants.Claims.EditEvent)]
+        public IActionResult Edit(int Id)
+        {   
+            var model = _eventService.GetEventForEdit(Id);
+            return View(model);
+        }
+
+        [HttpPost]
+        [CheckPermissions(ServiceConstants.Claims.EditEvent)]
+        public IActionResult Edit(EventEditVm model)
+        {
+            if (ModelState.IsValid)
+            {
+                _eventService.UpdateEvent(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        [CheckPermissions(ServiceConstants.Claims.EnrollToEvent)]
+        public IActionResult Enroll(int id)
+        {
+            if (HttpContext.Request.Method == HttpMethod.Get.ToString())
+            {
+                var model = _eventService.GetEventDetails(id);
+                return View(model);
+            }
+            else
+            {
+                _eventService.Enroll(id);
+                return RedirectToAction("Index");
+            }
+        }
+
+        [CheckPermissions(ServiceConstants.Claims.DeleteEvent)]
+        public IActionResult Delete(int id)
+        {
+            if(HttpContext.Request.Method == HttpMethod.Get.ToString())
+            {
+                var model = _eventService.GetEventDetails(id);
+                return View(model);
+            }
+            else
+            {
+                _eventService.Delete(id);
+                return RedirectToAction("Index");
+            }
         }
     }
 }

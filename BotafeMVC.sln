@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotafeMVC.Web", "BotafeMVC.Web\BotafeMVC.Web.csproj", "{7ABF8F10-E6BB-4F14-95B5-D4B7E190B3AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotafeMVC.Web", "BotafeMVC.Web\BotafeMVC.Web.csproj", "{7ABF8F10-E6BB-4F14-95B5-D4B7E190B3AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{403B0751-40B5-4DC6-9A7E-04C7A561D1C8}"
 EndProject
@@ -15,13 +15,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{54277D47-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{A74E9F2D-8D67-4D3B-BF47-ADC8458E7CED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotafeMVC.Application", "BotafeMVC.Application\BotafeMVC.Application.csproj", "{A5970971-CB2E-4BD8-932E-44874D3FA38E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotafeMVC.Application", "BotafeMVC.Application\BotafeMVC.Application.csproj", "{A5970971-CB2E-4BD8-932E-44874D3FA38E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotafeMVC.Domain", "BotafeMVC.Domain\BotafeMVC.Domain.csproj", "{4BBCC270-2797-4506-842D-AD4A6BC5D239}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotafeMVC.Domain", "BotafeMVC.Domain\BotafeMVC.Domain.csproj", "{4BBCC270-2797-4506-842D-AD4A6BC5D239}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotafeMVC.Infrastructure", "BotafeMVC.Infrastructure\BotafeMVC.Infrastructure.csproj", "{CA8C2BB4-7A4C-4A04-95E9-FFFF12B79BE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotafeMVC.Infrastructure", "BotafeMVC.Infrastructure\BotafeMVC.Infrastructure.csproj", "{CA8C2BB4-7A4C-4A04-95E9-FFFF12B79BE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotafeMVC.Tests", "BotafeMVC.Tests\BotafeMVC.Tests.csproj", "{D8DBA7B4-EDBC-43F9-8B68-9E3A8145B249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotafeMVC.Tests", "BotafeMVC.Tests\BotafeMVC.Tests.csproj", "{D8DBA7B4-EDBC-43F9-8B68-9E3A8145B249}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B93A6AA2-E304-4E65-A346-91F1A0BE4AE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotafeMVC.Common", "BotafeMVC.Common\BotafeMVC.Common.csproj", "{BDEE5905-9335-4F70-89B9-B84463D91BCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,10 @@ Global
 		{D8DBA7B4-EDBC-43F9-8B68-9E3A8145B249}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8DBA7B4-EDBC-43F9-8B68-9E3A8145B249}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8DBA7B4-EDBC-43F9-8B68-9E3A8145B249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDEE5905-9335-4F70-89B9-B84463D91BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDEE5905-9335-4F70-89B9-B84463D91BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDEE5905-9335-4F70-89B9-B84463D91BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDEE5905-9335-4F70-89B9-B84463D91BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,7 @@ Global
 		{4BBCC270-2797-4506-842D-AD4A6BC5D239} = {57109426-D4E7-4B95-9CDB-D665D19DDE39}
 		{CA8C2BB4-7A4C-4A04-95E9-FFFF12B79BE0} = {C346781A-DDF2-4DFA-9AD4-EDB73AA3EEC6}
 		{D8DBA7B4-EDBC-43F9-8B68-9E3A8145B249} = {54277D47-D701-490B-AD08-6CD7981E937F}
+		{BDEE5905-9335-4F70-89B9-B84463D91BCB} = {B93A6AA2-E304-4E65-A346-91F1A0BE4AE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {141B30C9-C6A0-4A03-AEB2-0908A5E2C26F}
